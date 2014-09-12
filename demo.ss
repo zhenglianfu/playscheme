@@ -774,12 +774,30 @@
 	  ((= k (col-position (car positions))) (car positions))
 	  (else (get-queen k (cdr positions)))))
 
-;; 
+;=============================; 
 
+; call-with-current-continuation
 
+;; this is not working in scheme code, return is not binding
+(define search-zero 
+  (lambda (lst) 
+    (for-each (lambda (ele) 
+		(if (= 0 ele) 
+		    (return ele) 
+		    (printf "~a~%" ele))) 
+	      lst)))
 
+; the correct code working in scheme code, correct search-zero procedure
+; with the procedure call/cc (call-with-current-continuation) to no-local exit(means that do not finish the whole procedure, exit in the middle of the procedure)
+(define search-zero (lambda (lst) 
+		      (call/cc 
+		       (lambda (return) 
+			 (for-each (lambda (x)
+				     (if (= 0 x) 
+					 (return x))) 
+				   lst) 
+			 #f))))
 
-
-
-
-
+; (search-zero '(1 2 0 3 5)) 
+; find the first 0 of index '3', the procedure is returned, do not check the rest of list '(3 5), exit of procedure 'search-zero' when find the first 0 of the list
+;=============================;
