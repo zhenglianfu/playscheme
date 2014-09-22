@@ -800,4 +800,18 @@
 
 ; (search-zero '(1 2 0 3 5)) 
 ; find the first 0 of index '3', the procedure is returned, do not check the rest of list '(3 5), exit of procedure 'search-zero' when find the first 0 of the list
-;=============================;
+;====================================================================;                                                                          
+; construct process 'equal?' by base procedure eq?
+; equal? can comp two items, if items are list both, will eq? each item of their items
+(define equal? (lambda (x y) 
+		 (if (and (pair? x) (pair? y)) 
+		     (equal-list? x y)
+		     (eq? x y))))
+
+(define (equal-list? x y)
+  (cond ((and (null? x) (null? y)) true)
+	((or (and (null? x) (not (null? y))) 
+	     (and (not (null? x)) (null? y))) false) 
+	((equal? (car x) (car y)) (equal? (cdr x) (cdr y))) 
+	(else false)))
+
